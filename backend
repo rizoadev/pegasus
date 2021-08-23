@@ -1,0 +1,861 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "pegasus",
+    "description": "Fast & Clean",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/v1/auth/register": {
+      "post": {
+        "tags": [
+          "v1 Auth"
+        ],
+        "summary": "Register new user",
+        "operationId": "auth_register_v1_auth_register_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserNewRegister"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRegister"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/login": {
+      "post": {
+        "tags": [
+          "v1 Auth"
+        ],
+        "summary": "Auth Login",
+        "operationId": "auth_login_v1_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLogin"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserToken"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/me": {
+      "get": {
+        "tags": [
+          "v1 Auth"
+        ],
+        "summary": "My profile data",
+        "operationId": "auth_me_v1_auth_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserBase"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/v1/auth/check_available_email": {
+      "post": {
+        "tags": [
+          "v1 Auth"
+        ],
+        "summary": "Check email waktu pendaftaran",
+        "operationId": "auth_checkmail_v1_auth_check_available_email_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserEmail"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/forgot_password": {
+      "post": {
+        "tags": [
+          "v1 Auth"
+        ],
+        "summary": "Request password reset",
+        "operationId": "auth_forgot_password_v1_auth_forgot_password_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserEmail"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/check_password": {
+      "post": {
+        "tags": [
+          "v1 Auth"
+        ],
+        "summary": "Validate password by UserID",
+        "operationId": "auth_checkpass_v1_auth_check_password_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/v1/auth/reset_password/{code}": {
+      "post": {
+        "tags": [
+          "v1 Auth"
+        ],
+        "summary": "Reset password by UserID",
+        "operationId": "auth_reset_password_v1_auth_reset_password__code__post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "UserAddress": {
+        "title": "UserAddress",
+        "type": "object",
+        "properties": {
+          "nama": {
+            "title": "Nama",
+            "type": "string",
+            "default": ""
+          },
+          "whatsapp": {
+            "title": "Whatsapp",
+            "type": "string",
+            "default": ""
+          },
+          "provinsi": {
+            "title": "Provinsi",
+            "type": "integer",
+            "default": 0
+          },
+          "provinsi_name": {
+            "title": "Provinsi Name",
+            "type": "string",
+            "default": ""
+          },
+          "kabupaten": {
+            "title": "Kabupaten",
+            "type": "integer",
+            "default": 0
+          },
+          "kabupaten_name": {
+            "title": "Kabupaten Name",
+            "type": "string",
+            "default": ""
+          },
+          "kecamatan": {
+            "title": "Kecamatan",
+            "type": "integer",
+            "default": 0
+          },
+          "kecamatan_name": {
+            "title": "Kecamatan Name",
+            "type": "string",
+            "default": ""
+          },
+          "kelurahan": {
+            "title": "Kelurahan",
+            "type": "integer",
+            "default": 0
+          },
+          "kelurahan_name": {
+            "title": "Kelurahan Name",
+            "type": "string",
+            "default": ""
+          },
+          "kodepos": {
+            "title": "Kodepos",
+            "type": "string",
+            "default": ""
+          },
+          "alamat": {
+            "title": "Alamat",
+            "type": "string",
+            "default": ""
+          }
+        }
+      },
+      "UserBase": {
+        "title": "UserBase",
+        "required": [
+          "fullname",
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "fullname": {
+            "title": "Fullname",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "org": {
+            "title": "Org",
+            "type": "string",
+            "default": ""
+          },
+          "orgs": {
+            "title": "Orgs",
+            "type": "array",
+            "items": {},
+            "default": []
+          },
+          "avatar": {
+            "title": "Avatar",
+            "type": "string",
+            "default": ""
+          },
+          "status": {
+            "title": "Status",
+            "type": "string",
+            "default": "inactive"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string",
+            "default": ""
+          },
+          "meta": {
+            "title": "Meta",
+            "type": "object",
+            "default": {}
+          },
+          "verified": {
+            "title": "Verified",
+            "type": "boolean",
+            "default": false
+          },
+          "created": {
+            "title": "Created",
+            "type": "string",
+            "format": "date-time",
+            "default": "2021-08-18T23:02:50.447467"
+          },
+          "modified": {
+            "title": "Modified",
+            "type": "string",
+            "format": "date-time",
+            "default": "2021-08-18T23:02:50.447475"
+          },
+          "created_date": {
+            "title": "Created Date",
+            "type": "string",
+            "format": "date-time"
+          },
+          "active_date": {
+            "title": "Active Date",
+            "type": "string",
+            "format": "date-time"
+          },
+          "wallet_balance": {
+            "title": "Wallet Balance",
+            "type": "integer",
+            "default": 0
+          },
+          "referral": {
+            "title": "Referral",
+            "type": "string",
+            "default": ""
+          },
+          "badges": {
+            "title": "Badges",
+            "type": "array",
+            "items": {},
+            "default": []
+          },
+          "libur": {
+            "title": "Libur",
+            "type": "boolean",
+            "default": false
+          },
+          "whatsapp": {
+            "title": "Whatsapp",
+            "type": "string",
+            "default": ""
+          },
+          "whatsapp_text": {
+            "title": "Whatsapp Text",
+            "type": "string",
+            "default": ""
+          },
+          "rekening": {
+            "title": "Rekening",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserRekening"
+              }
+            ],
+            "default": {
+              "bank": "",
+              "cabang": "",
+              "norek": "",
+              "nama": ""
+            }
+          },
+          "online_store": {
+            "title": "Online Store",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserMarketplace"
+              }
+            ],
+            "default": {
+              "instagram": "",
+              "shopee": "",
+              "tokopedia": "",
+              "bukalapak": "",
+              "lazada": "",
+              "lainnya": ""
+            }
+          },
+          "alamat_landing": {
+            "title": "Alamat Landing",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserAddress"
+              }
+            ],
+            "default": {
+              "nama": "",
+              "whatsapp": "",
+              "provinsi": 0,
+              "provinsi_name": "",
+              "kabupaten": 0,
+              "kabupaten_name": "",
+              "kecamatan": 0,
+              "kecamatan_name": "",
+              "kelurahan": 0,
+              "kelurahan_name": "",
+              "kodepos": "",
+              "alamat": ""
+            }
+          },
+          "alamat_pengiriman": {
+            "title": "Alamat Pengiriman",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserAddress"
+              }
+            ],
+            "default": {
+              "nama": "",
+              "whatsapp": "",
+              "provinsi": 0,
+              "provinsi_name": "",
+              "kabupaten": 0,
+              "kabupaten_name": "",
+              "kecamatan": 0,
+              "kecamatan_name": "",
+              "kelurahan": 0,
+              "kelurahan_name": "",
+              "kodepos": "",
+              "alamat": ""
+            }
+          }
+        }
+      },
+      "UserEmail": {
+        "title": "UserEmail",
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string"
+          }
+        }
+      },
+      "UserLogin": {
+        "title": "UserLogin",
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          }
+        }
+      },
+      "UserMarketplace": {
+        "title": "UserMarketplace",
+        "type": "object",
+        "properties": {
+          "instagram": {
+            "title": "Instagram",
+            "type": "string",
+            "default": ""
+          },
+          "shopee": {
+            "title": "Shopee",
+            "type": "string",
+            "default": ""
+          },
+          "tokopedia": {
+            "title": "Tokopedia",
+            "type": "string",
+            "default": ""
+          },
+          "bukalapak": {
+            "title": "Bukalapak",
+            "type": "string",
+            "default": ""
+          },
+          "lazada": {
+            "title": "Lazada",
+            "type": "string",
+            "default": ""
+          },
+          "lainnya": {
+            "title": "Lainnya",
+            "type": "string",
+            "default": ""
+          }
+        }
+      },
+      "UserNewRegister": {
+        "title": "UserNewRegister",
+        "required": [
+          "fullname",
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "fullname": {
+            "title": "Fullname",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          }
+        }
+      },
+      "UserRegister": {
+        "title": "UserRegister",
+        "required": [
+          "fullname",
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "fullname": {
+            "title": "Fullname",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "org": {
+            "title": "Org",
+            "type": "string",
+            "default": ""
+          },
+          "orgs": {
+            "title": "Orgs",
+            "type": "array",
+            "items": {},
+            "default": []
+          },
+          "avatar": {
+            "title": "Avatar",
+            "type": "string",
+            "default": ""
+          },
+          "status": {
+            "title": "Status",
+            "type": "string",
+            "default": "inactive"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string",
+            "default": ""
+          },
+          "meta": {
+            "title": "Meta",
+            "type": "object",
+            "default": {}
+          },
+          "verified": {
+            "title": "Verified",
+            "type": "boolean",
+            "default": false
+          },
+          "created": {
+            "title": "Created",
+            "type": "string",
+            "format": "date-time",
+            "default": "2021-08-18T23:02:50.447467"
+          },
+          "modified": {
+            "title": "Modified",
+            "type": "string",
+            "format": "date-time",
+            "default": "2021-08-18T23:02:50.447475"
+          },
+          "created_date": {
+            "title": "Created Date",
+            "type": "string",
+            "format": "date-time"
+          },
+          "active_date": {
+            "title": "Active Date",
+            "type": "string",
+            "format": "date-time"
+          },
+          "wallet_balance": {
+            "title": "Wallet Balance",
+            "type": "integer",
+            "default": 0
+          },
+          "referral": {
+            "title": "Referral",
+            "type": "string",
+            "default": ""
+          },
+          "badges": {
+            "title": "Badges",
+            "type": "array",
+            "items": {},
+            "default": []
+          },
+          "libur": {
+            "title": "Libur",
+            "type": "boolean",
+            "default": false
+          },
+          "whatsapp": {
+            "title": "Whatsapp",
+            "type": "string",
+            "default": ""
+          },
+          "whatsapp_text": {
+            "title": "Whatsapp Text",
+            "type": "string",
+            "default": ""
+          },
+          "rekening": {
+            "title": "Rekening",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserRekening"
+              }
+            ],
+            "default": {
+              "bank": "",
+              "cabang": "",
+              "norek": "",
+              "nama": ""
+            }
+          },
+          "online_store": {
+            "title": "Online Store",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserMarketplace"
+              }
+            ],
+            "default": {
+              "instagram": "",
+              "shopee": "",
+              "tokopedia": "",
+              "bukalapak": "",
+              "lazada": "",
+              "lainnya": ""
+            }
+          },
+          "alamat_landing": {
+            "title": "Alamat Landing",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserAddress"
+              }
+            ],
+            "default": {
+              "nama": "",
+              "whatsapp": "",
+              "provinsi": 0,
+              "provinsi_name": "",
+              "kabupaten": 0,
+              "kabupaten_name": "",
+              "kecamatan": 0,
+              "kecamatan_name": "",
+              "kelurahan": 0,
+              "kelurahan_name": "",
+              "kodepos": "",
+              "alamat": ""
+            }
+          },
+          "alamat_pengiriman": {
+            "title": "Alamat Pengiriman",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserAddress"
+              }
+            ],
+            "default": {
+              "nama": "",
+              "whatsapp": "",
+              "provinsi": 0,
+              "provinsi_name": "",
+              "kabupaten": 0,
+              "kabupaten_name": "",
+              "kecamatan": 0,
+              "kecamatan_name": "",
+              "kelurahan": 0,
+              "kelurahan_name": "",
+              "kodepos": "",
+              "alamat": ""
+            }
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          },
+          "uid": {
+            "title": "Uid",
+            "type": "string"
+          }
+        }
+      },
+      "UserRekening": {
+        "title": "UserRekening",
+        "type": "object",
+        "properties": {
+          "bank": {
+            "title": "Bank",
+            "type": "string",
+            "default": ""
+          },
+          "cabang": {
+            "title": "Cabang",
+            "type": "string",
+            "default": ""
+          },
+          "norek": {
+            "title": "Norek",
+            "type": "string",
+            "default": ""
+          },
+          "nama": {
+            "title": "Nama",
+            "type": "string",
+            "default": ""
+          }
+        }
+      },
+      "UserToken": {
+        "title": "UserToken",
+        "type": "object",
+        "properties": {
+          "login_status": {
+            "title": "Login Status",
+            "type": "string",
+            "default": "success"
+          },
+          "token": {
+            "title": "Token",
+            "type": "string"
+          }
+        }
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

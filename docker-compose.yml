@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    volumes:
+      - ./app:/home
+    ports:
+      - 80:8000
+      - 8081:8081
